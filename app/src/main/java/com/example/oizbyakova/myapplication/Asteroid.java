@@ -13,9 +13,13 @@ public class Asteroid extends SpaceBody{
         Random random = new Random();
 
         bitmapId = R.drawable.asteroid;
-        y=0;
+        y = 0;
         x = random.nextInt(GameView.maxX) - radius;
-        size = radius*2;
+
+        if (x <= 0)
+            x = 1;
+
+        size = radius * 2;
         speed = minSpeed + (maxSpeed - minSpeed) * random.nextFloat();
 
         init(context);

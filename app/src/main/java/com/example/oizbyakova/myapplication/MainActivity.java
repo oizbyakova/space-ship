@@ -11,17 +11,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public static boolean isLeftPressed = false; // нажата левая кнопка
     public static boolean isRightPressed = false; // нажата правая кнопка
 
+    private GameView gameView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GameView gameView = new GameView(this); // создаём gameView
+        gameView = new GameView(this); // создаём gameView
         LinearLayout gameLayout = (LinearLayout) findViewById(R.id.gameLayout); // находим gameLayout
         gameLayout.addView(gameView); // и добавляем в него gameView
         Button leftButton = (Button) findViewById(R.id.leftButton); // находим кнопки
         Button rightButton = (Button) findViewById(R.id.rightButton);
         leftButton.setOnTouchListener(this); // и добавляем этот класс как слушателя (при нажатии сработает onTouch)
         rightButton.setOnTouchListener(this);
+        gameLayout.setOnTouchListener(this);
     }
 
     @Override
@@ -45,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     case MotionEvent.ACTION_UP:
                         isRightPressed = false;
                         break;
+                }
+                break;
+            case R.id.gameLayout:
+                if (!gameView.isGameRunning()) {
+                    gameView.startNewGame();
                 }
                 break;
         }
