@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-public class SpaceBody {
+public abstract class SpaceBody {
 
     protected float x; // координаты
     protected float y;
@@ -24,9 +24,7 @@ public class SpaceBody {
         cBitmap.recycle();
     }
 
-    void update() {
-        // тут будут вычисляться новые координаты
-    }
+    abstract void update();
 
     void draw(Paint paint, Canvas canvas) {
         // рисуем картинку

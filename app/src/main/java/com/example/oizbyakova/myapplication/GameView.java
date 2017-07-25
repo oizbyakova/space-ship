@@ -35,6 +35,20 @@ public class GameView extends SurfaceView implements Runnable {
         surfaceHolder = getHolder();
         paint = new Paint();
 
+        startNewGame();
+    }
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
+    public void startNewGame(){
+        //инициализируем игру
+        firstTime = true;
+        asteroids = new ArrayList<>();
+
+        gameRunning = true;
+
         // инициализируем поток
         gameThread = new Thread(this);
         gameThread.start();
