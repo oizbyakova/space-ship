@@ -7,28 +7,42 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+public final class MainActivity extends AppCompatActivity implements View.OnTouchListener {
     public static boolean isLeftPressed = false; // нажата левая кнопка
     public static boolean isRightPressed = false; // нажата правая кнопка
 
     private GameView gameView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        gameView = new GameView(this); // создаём gameView
+
+        CreateUi();
+    }
+
+    private void CreateUi() {
         LinearLayout gameLayout = (LinearLayout) findViewById(R.id.gameLayout); // находим gameLayout
-        gameLayout.addView(gameView); // и добавляем в него gameView
-        Button leftButton = (Button) findViewById(R.id.leftButton); // находим кнопки
-        Button rightButton = (Button) findViewById(R.id.rightButton);
-        leftButton.setOnTouchListener(this); // и добавляем этот класс как слушателя (при нажатии сработает onTouch)
-        rightButton.setOnTouchListener(this);
+        assert gameLayout != null;
         gameLayout.setOnTouchListener(this);
+
+        Button leftButton = (Button) findViewById(R.id.leftButton); // находим кнопки
+        assert leftButton != null;
+        leftButton.setOnTouchListener(this); // и добавляем этот класс как слушателя (при нажатии сработает onTouch)
+
+        Button rightButton = (Button) findViewById(R.id.rightButton);
+        assert rightButton != null;
+        rightButton.setOnTouchListener(this);
+
+        //TODO Move Game instance to Application class
+        gameView = new GameView(BaseApplication.getInstance()); // создаём gameView
+
+        gameLayout.addView(gameView); // и добавляем в него gameView
     }
 
     @Override
-    public boolean onTouch(View button, MotionEvent motion) {
+    public final boolean onTouch(View button, MotionEvent motion) {
         switch (button.getId()) { // определяем какая кнопка
             case R.id.leftButton:
                 switch (motion.getAction()) { // определяем нажата или отпущена
