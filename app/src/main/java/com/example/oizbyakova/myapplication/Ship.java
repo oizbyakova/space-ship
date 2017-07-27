@@ -3,12 +3,12 @@ package com.example.oizbyakova.myapplication;
 
 import android.content.Context;
 
-class Ship extends SpaceBody {
+final class Ship extends SpaceBody {
 
     Ship(Context context) {
         bitmapId = R.drawable.ship;
         // определяем начальные параметры
-        size = 5;
+        size = 4;
         x = 7;
         y = GameView.maxY - size - 1;
         speed = (float) 0.2;
@@ -17,12 +17,12 @@ class Ship extends SpaceBody {
     }
 
     @Override
-    public void update() {
+    public final void update() {
         // перемещаем корабль в зависимости от нажатой кнопки
-        if (MainActivity.isLeftPressed && x >= 0) {
+        if (GameView.isLeftButtonPressed() && x >= 0) {
             x -= speed;
         }
-        if (MainActivity.isRightPressed && x <= GameView.maxX - 5) {
+        if (GameView.isRightButtonPressed() && x <= GameView.maxX - 5) {
             x += speed;
         }
     }

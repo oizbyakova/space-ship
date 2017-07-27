@@ -19,14 +19,14 @@ abstract class SpaceBody {
 
     abstract void update();
 
-    void init(Context context) {
+    final void init(Context context) {
         // сжимаем картинку до нужных размеров
         Bitmap cBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
         bitmap = Bitmap.createScaledBitmap(cBitmap, (int) (size * GameView.unitW), (int) (size * GameView.unitH), false);
         cBitmap.recycle();
     }
 
-    void draw(Paint paint, Canvas canvas) {
+    final void draw(Paint paint, Canvas canvas) {
         // рисуем картинку
         canvas.drawBitmap(bitmap, x * GameView.unitW, y * GameView.unitH, paint);
     }

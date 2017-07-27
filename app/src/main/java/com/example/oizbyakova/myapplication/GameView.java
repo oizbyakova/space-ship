@@ -10,23 +10,26 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 
-public class GameView extends SurfaceView implements Runnable {
+public final class GameView extends SurfaceView implements Runnable {
+
+    private static final int ASTEROID_INTERVAL = 50; // время через которое появляются астероиды (в итерациях)
+
+    private static boolean isLeftButtonPressed = false; // нажата левая кнопка
+    private static boolean isRightButtonPressed = false; // нажата правая кнопка
 
     public static int maxX = 20; // размер по горизонтали
     public static int maxY = 28; // размер по вертикали
     public static float unitW = 0; // пикселей в юните по горизонтали
     public static float unitH = 0; // пикселей в юните по вертикали
 
+
     private boolean firstTime = true;
     private boolean gameRunning = true;
     private Ship ship;
-    private Thread gameThread = null;
     private Paint paint;
-    private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
     private ArrayList<Asteroid> asteroids = new ArrayList<>(); // тут будут харанится астероиды
-    private final int ASTEROID_INTERVAL = 50; // время через которое появляются астероиды (в итерациях)
     private int currentTime = 0;
 
     public GameView(Context context) {
@@ -38,11 +41,27 @@ public class GameView extends SurfaceView implements Runnable {
         startNewGame();
     }
 
-    public boolean isGameRunning() {
+    public final boolean isGameRunning() {
         return gameRunning;
     }
 
-    public void startNewGame(){
+    public static boolean isLeftButtonPressed() {
+        return isLeftButtonPressed;
+    }
+
+    public static void setLeftButtonPressed(boolean leftButtonPressed) {
+        isLeftButtonPressed = leftButtonPressed;
+    }
+
+    public static boolean isRightButtonPressed() {
+        return isRightButtonPressed;
+    }
+
+    public static void setRightButtonPressed(boolean rightButtonPressed) {
+        isRightButtonPressed = rightButtonPressed;
+    }
+
+    public final void startNewGame(){
         //инициализируем игру
         firstTime = true;
         asteroids = new ArrayList<>();
@@ -50,12 +69,12 @@ public class GameView extends SurfaceView implements Runnable {
         gameRunning = true;
 
         // инициализируем поток
-        gameThread = new Thread(this);
+        Thread gameThread = new Thread(this);
         gameThread.start();
     }
 
     @Override
-    public void run() {
+    public final void run() {
         while (gameRunning) {
             update();
             draw();
@@ -83,11 +102,10 @@ public class GameView extends SurfaceView implements Runnable {
                 unitW = surfaceHolder.getSurfaceFrame().width()/maxX; // вычисляем число пикселей в юните
                 unitH = surfaceHolder.getSurfaceFrame().height()/maxY;
 
-
                 ship = new Ship(getContext()); // добавляем корабль
             }
 
-            canvas = surfaceHolder.lockCanvas(); // закрываем canvas
+            Canvas canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.BLACK); // заполняем фон чёрным
 
             ship.draw(paint, canvas); // рисуем корабль
@@ -102,7 +120,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void control() { // пауза на 17 миллисекунд
         try {
-            gameThread.sleep(17);
+            Thread.sleep(17);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
