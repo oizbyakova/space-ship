@@ -7,26 +7,26 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-public abstract class SpaceBody {
+abstract class SpaceBody {
 
-    protected float x; // координаты
-    protected float y;
-    protected float size; // размер
-    protected float speed; // скорость
-    protected int bitmapId; // id картинки
-    protected Bitmap bitmap; // картинка
+    private Bitmap bitmap; // картинка
 
-    void init(Context context) {
-        // сжимаем картинку до нужных размеров
-        Bitmap cBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
-        bitmap = Bitmap.createScaledBitmap(
-                cBitmap, (int) (size * GameView.unitW), (int) (size * GameView.unitH), false);
-        cBitmap.recycle();
-    }
+    float x; // координаты
+    float y;
+    float size; // размер
+    float speed; // скорость
+    int bitmapId; // id картинки
 
     abstract void update();
 
-    void draw(Paint paint, Canvas canvas) {
+    final void init(Context context) {
+        // сжимаем картинку до нужных размеров
+        Bitmap cBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
+        bitmap = Bitmap.createScaledBitmap(cBitmap, (int) (size * GameView.unitW), (int) (size * GameView.unitH), false);
+        cBitmap.recycle();
+    }
+
+    final void draw(Paint paint, Canvas canvas) {
         // рисуем картинку
         canvas.drawBitmap(bitmap, x * GameView.unitW, y * GameView.unitH, paint);
     }

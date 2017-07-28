@@ -4,12 +4,12 @@ import android.content.Context;
 
 import java.util.Random;
 
-public class Asteroid extends SpaceBody{
-    private int radius = 2; // радиус
-    private float minSpeed = (float) 0.1; // минимальная скорость
-    private float maxSpeed = (float) 0.5; // максимальная скорость
+final class Asteroid extends SpaceBody {
+    private static final int radius = 1; // радиус
+    private static final float minSpeed = (float) 0.1; // минимальная скорость
+    private static final float maxSpeed = (float) 0.5; // максимальная скорость
 
-    public Asteroid(Context context) {
+    Asteroid(Context context) {
         Random random = new Random();
 
         bitmapId = R.drawable.asteroid;
@@ -26,11 +26,11 @@ public class Asteroid extends SpaceBody{
     }
 
     @Override
-    public void update() {
+    public final void update() {
         y += speed;
     }
 
-    public boolean isCollision(float shipX, float shipY, float shipSize) {
-        return !(((x+size) < shipX)||(x > (shipX+shipSize))||((y+size) < shipY)||(y > (shipY+shipSize)));
+    final boolean isCollision(float shipX, float shipY, float shipSize) {
+        return !(((x + size) < shipX) || (x > (shipX + shipSize)) || ((y + size) < shipY) || (y > (shipY + shipSize)));
     }
 }

@@ -1,61 +1,85 @@
 package com.example.oizbyakova.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
-    public static boolean isLeftPressed = false; // нажата левая кнопка
-    public static boolean isRightPressed = false; // нажата правая кнопка
+public final class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    private GameView gameView;
+    protected GameView gameView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        gameView = new GameView(this); // создаём gameView
+
+        CreateUi();
+    }
+
+    private void CreateUi() {
         LinearLayout gameLayout = (LinearLayout) findViewById(R.id.gameLayout); // находим gameLayout
-        gameLayout.addView(gameView); // и добавляем в него gameView
-        Button leftButton = (Button) findViewById(R.id.leftButton); // находим кнопки
-        Button rightButton = (Button) findViewById(R.id.rightButton);
-        leftButton.setOnTouchListener(this); // и добавляем этот класс как слушателя (при нажатии сработает onTouch)
-        rightButton.setOnTouchListener(this);
+        //noinspection ConstantConditions
         gameLayout.setOnTouchListener(this);
+
+        Button leftButton = (Button) findViewById(R.id.leftButton); // находим кнопки
+        //noinspection ConstantConditions
+        leftButton.setOnTouchListener(this); // и добавляем этот класс как слушателя (при нажатии сработает onTouch)
+
+        Button rightButton = (Button) findViewById(R.id.rightButton);
+        //noinspection ConstantConditions
+        rightButton.setOnTouchListener(this);
+
+        //TODO Move Game instance to Application class
+        gameView = new GameView(BaseApplication.getInstance()); // создаём gameView
+
+        gameLayout.addView(gameView); // и добавляем в него gameView
     }
 
     @Override
-    public boolean onTouch(View button, MotionEvent motion) {
+    public final boolean onTouch(View button, MotionEvent motion) {
         switch (button.getId()) { // определяем какая кнопка
             case R.id.leftButton:
-                switch (motion.getAction()) { // определяем нажата или отпущена
-                    case MotionEvent.ACTION_DOWN:
-                        isLeftPressed = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isLeftPressed = false;
-                        break;
-                }
+                processLeftButton(motion);
                 break;
             case R.id.rightButton:
-                switch (motion.getAction()) { // определяем нажата или отпущена
-                    case MotionEvent.ACTION_DOWN:
-                        isRightPressed = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isRightPressed = false;
-                        break;
-                }
+                processRightButton(motion);
                 break;
             case R.id.gameLayout:
-                if (!gameView.isGameRunning()) {
-                    gameView.startNewGame();
-                }
+                processGameFieldTouch();
                 break;
         }
         return true;
+    }
+
+    private void processGameFieldTouch() {
+        if (!gameView.isGameRunning()) {
+            gameView.startNewGame();
+        }
+    }
+
+    private void processRightButton(MotionEvent motion) {
+        switch (motion.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                GameView.setRightButtonPressed(true);
+                break;
+            case MotionEvent.ACTION_UP:
+                GameView.setRightButtonPressed(false);
+                break;
+        }
+    }
+
+    private void processLeftButton(MotionEvent motion) {
+        switch (motion.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                GameView.setLeftButtonPressed(true);
+                break;
+            case MotionEvent.ACTION_UP:
+                GameView.setLeftButtonPressed(false);
+                break;
+        }
     }
 }
